@@ -1,5 +1,6 @@
 `#!/usr/bin/env node
 `
+
 jsonfile = process.argv[2] || 'tmpl-precompile.json'
 precompile = require('../lib/tmpl-precompile').precompile
 fs = require 'fs'

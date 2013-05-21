@@ -1,42 +1,54 @@
-var debugEnabled = debugEnabled || {};
-function attrs(obj){
+(function(){window.debugEnabled = window.debugEnabled || {};
+function attrs(obj, escaped){
   var buf = []
     , terse = obj.terse;
+
   delete obj.terse;
   var keys = Object.keys(obj)
     , len = keys.length;
+
   if (len) {
     buf.push('');
     for (var i = 0; i < len; ++i) {
       var key = keys[i]
         , val = obj[key];
+
       if ('boolean' == typeof val || null == val) {
         if (val) {
           terse
             ? buf.push(key)
             : buf.push(key + '="' + key + '"');
         }
+      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+        buf.push(key + "='" + JSON.stringify(val) + "'");
       } else if ('class' == key && Array.isArray(val)) {
-        buf.push(key + '="' + escape(val.join(' ')) + '"');
+        buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
+      } else if (escaped && escaped[key]) {
+        buf.push(key + '="' + exports.escape(val) + '"');
       } else {
-        buf.push(key + '="' + escape(val) + '"');
+        buf.push(key + '="' + val + '"');
       }
     }
   }
+
   return buf.join(' ');
 }
 function escape(html){
   return String(html)
-    .replace(/&(?!\w+;)/g, '&amp;')
+    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
-function rethrow(err, str, filename, lineno){
+function rethrow(err, filename, lineno){
+  if (!filename) throw err;
+  if (typeof window != 'undefined') throw err;
+
   var context = 3
+    , str = require('fs').readFileSync(filename, 'utf8')
     , lines = str.split('\n')
     , start = Math.max(lineno - context, 0)
-    , end = Math.min(lines.length, lineno + context); 
+    , end = Math.min(lines.length, lineno + context);
 
   // Error context
   var context = lines.slice(start, end).map(function(line, i){
@@ -49,7 +61,7 @@ function rethrow(err, str, filename, lineno){
 
   // Alter exception message
   err.path = filename;
-  err.message = (filename || 'Jade') + ':' + lineno 
+  err.message = (filename || 'Jade') + ':' + lineno
     + '\n' + context + '\n\n' + err.message;
   throw err;
 }
@@ -58,54 +70,6 @@ var jade = {
   escape: escape,
   rethrow: rethrow
 };
-debugEnabled.layout = function anonymous(locals) {
-var __ = { lineno: 1, input: "#content\n  h1 Hello world!", filename: undefined };
-var rethrow = jade.rethrow;
-try {
-var attrs = jade.attrs, escape = jade.escape;
-var buf = [];
-with (locals || {}) {
-var interp;
-__.lineno = 1;
-__.lineno = 1;
-buf.push('<div');
-buf.push(attrs({ 'id':('content') }));
-buf.push('>');
-__.lineno = undefined;
-__.lineno = 2;
-buf.push('<h1>');
-buf.push('Hello world!');
-__.lineno = undefined;
-buf.push('</h1>');
-buf.push('</div>');
-}
-return buf.join("");
-} catch (err) {
-  rethrow(err, __.input, __.filename, __.lineno);
-}
-};
-debugEnabled.root = function anonymous(locals) {
-var __ = { lineno: 1, input: "h2 Hello\np World!", filename: undefined };
-var rethrow = jade.rethrow;
-try {
-var attrs = jade.attrs, escape = jade.escape;
-var buf = [];
-with (locals || {}) {
-var interp;
-__.lineno = 1;
-__.lineno = 1;
-buf.push('<h2>');
-buf.push('Hello');
-__.lineno = undefined;
-buf.push('</h2>');
-__.lineno = 2;
-buf.push('<p>');
-buf.push('World!');
-__.lineno = undefined;
-buf.push('</p>');
-}
-return buf.join("");
-} catch (err) {
-  rethrow(err, __.input, __.filename, __.lineno);
-}
-};
+debugEnabled.layout = function (locals){ return fn(locals, Object.create(runtime)) };
+debugEnabled.root = function (locals){ return fn(locals, Object.create(runtime)) };
+})();

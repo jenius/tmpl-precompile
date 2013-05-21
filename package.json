@@ -22,12 +22,15 @@
   "main": "./index.js",
   "bin": { "tmpl-precompile": "./bin/tmpl-precompile" },
   "dependencies": {
-    "jade": "0.14.0",
-    "uglify-js": "1.2.4", 
-    "async": "0.1.15"
+    "jade": "0.30.x",
+    "uglify-js": "1.3.x",
+    "async": "0.2.x"
   },
   "devDependencies": {
     "vows": ">= 0.5.8"
   }, 
+  "scripts": {
+    "test": "cake test"
+  },
   "engines": { "node": ">= 0.4.0" }
 }
