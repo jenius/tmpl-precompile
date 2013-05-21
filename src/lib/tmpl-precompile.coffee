@@ -195,6 +195,6 @@ module.exports.precompile = (settings,dir,cb) ->
       console.log err
     else
       if cb? then return cb()
-      console.log "\n\n\n...Done.\n\n"
+      console.log "...Done.\n"
 
 module.exports.Precompiler = Precompiler
