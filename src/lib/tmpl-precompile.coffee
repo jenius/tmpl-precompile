@@ -1,6 +1,4 @@
-version = [0,1,4]
-
-jade   = require "../node_modules/jade"
+jade   = require "jade"
 fs     = require "fs"
 path   = require "path"
 util   = require "util"
@@ -66,44 +64,50 @@ class Precompiler
       unless @callback?
         throw 'ERR: No callback or output directory defined for ' + groupSettings.namespace
 
-    self = @
+  ###
+  getNamespaces()
+  Description: get and return all the namespace declarations
+  ### 
 
-    Namespacer(@settings, (err, res) ->
+  getNamespaces: (cb) ->
+    Namespacer @settings, (err, res) =>
       if err? then throw err
       else
-        self.namespaces = res.join('\n') + '\n'
-    )
+        cb(res.join('\n') + '\n')
 
   ###
   compile()
   Description: Flow control and execution for the compilation
   ###
 
-  compile : ->
-    {templates, namespaces, inline, helpers, uglify, output} = @settings
-    buf = []
-    
-    buf.push "(function(){"
+  compile: ->
 
-    buf.push @namespaces if namespaces isnt false
+    @getNamespaces (namespaces) =>
 
-    buf.push @helpers() if helpers isnt false and inline isnt true
+      {templates, inline, helpers, uglify, output} = @settings
+      buf = []
+      
+      buf.push "(function(){"
 
-    for template in @settings.templates
-      #buf += optimizeOutput @settings, @compileTemplate(template).toString()
-      buf.push @compileTemplate(template).toString()
-    
-    buf.push "})();"
+      buf.push namespaces if namespaces isnt false
 
-    buf = buf.join("")
+      buf.push @helpers() if helpers isnt false and inline isnt true
 
-    buf = @uglifyOutput buf if uglify isnt false
+      for template in @settings.templates
+        #buf += optimizeOutput @settings, @compileTemplate(template).toString()
+        buf.push @compileTemplate(template).toString()
+      
+      buf.push "})();"
 
-    if output?
-      fs.writeFileSync @settings.output, buf
-      console.log ('Saving ' + (if uglify isnt false then 'and Uglifying ' else '' )).bold + ':' + output if @settings.verbose
+      buf = buf.join("")
 
-    if @callback? then @callback(null, buf)
+      buf = @uglifyOutput buf if uglify isnt false
+
+      if output?
+        fs.writeFileSync @settings.output, buf
+        console.log ('Saving ' + (if uglify isnt false then 'and Uglifying ' else '' )).bold + ':' + output if @settings.verbose
+
+      if @callback? then @callback(null, buf)
 
   ###
   compileTemplate()
@@ -121,7 +125,7 @@ class Precompiler
     sourceFile = source + template + '.jade'
     data = fs.readFileSync(sourceFile, 'utf8')
 
-    namespace + '.' + templateNamespace + ' = ' + jade.compile(data, {compileDebug: compileDebug || false, inline: inline || false}) + ';\n'
+    namespace + '.' + templateNamespace + ' = ' + jade.compile(data, { compileDebug: compileDebug || false, inline: inline || false, client: true }) + ';\n'
 
   ###
   helpers()
@@ -129,6 +133,7 @@ class Precompiler
   ###
 
   helpers: ->
+
     # Get Jade helpers
     attrs = jade.runtime.attrs.toString()
     escape = jade.runtime.escape.toString()

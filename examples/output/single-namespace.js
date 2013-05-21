@@ -44,6 +44,18 @@ var jade = {
   attrs: attrs,
   escape: escape
 };
-singleNamespace.layout = function (locals){ return fn(locals, Object.create(runtime)) };
-singleNamespace.root = function (locals){ return fn(locals, Object.create(runtime)) };
+singleNamespace.layout = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<div id=\"content\"><h1>Hello world!</h1></div>");
+}
+return buf.join("");
+};
+singleNamespace.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
 })();

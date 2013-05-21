@@ -49,9 +49,39 @@ var jade = {
   attrs: attrs,
   escape: escape
 };
-very.long.namespace.layout = function (locals){ return fn(locals, Object.create(runtime)) };
-very.long.namespace.root = function (locals){ return fn(locals, Object.create(runtime)) };
-very.long.namespace.level1.root = function (locals){ return fn(locals, Object.create(runtime)) };
-very.long.namespace.level1.level2.root = function (locals){ return fn(locals, Object.create(runtime)) };
-very.long.namespace.level1.level2.level3.root = function (locals){ return fn(locals, Object.create(runtime)) };
+very.long.namespace.layout = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<div id=\"content\"><h1>Hello world!</h1></div>");
+}
+return buf.join("");
+};
+very.long.namespace.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+very.long.namespace.level1.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+very.long.namespace.level1.level2.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+very.long.namespace.level1.level2.level3.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
 })();

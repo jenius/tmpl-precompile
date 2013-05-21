@@ -47,9 +47,39 @@ var jade = {
   attrs: attrs,
   escape: escape
 };
-templates.layout = function (locals){ return fn(locals, Object.create(runtime)) };
-templates.root = function (locals){ return fn(locals, Object.create(runtime)) };
-templates.level1.root = function (locals){ return fn(locals, Object.create(runtime)) };
-templates.level1.level2.root = function (locals){ return fn(locals, Object.create(runtime)) };
-templates.level1.level2.level3.root = function (locals){ return fn(locals, Object.create(runtime)) };
+templates.layout = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<div id=\"content\"><h1>Hello world!</h1></div>");
+}
+return buf.join("");
+};
+templates.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+templates.level1.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+templates.level1.level2.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
+templates.level1.level2.level3.root = function anonymous(locals) {
+var buf = [];
+with (locals || {}) {
+buf.push("<h2>Hello</h2><p>World!</p>");
+}
+return buf.join("");
+};
 })();
