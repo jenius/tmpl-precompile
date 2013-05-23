@@ -135,7 +135,7 @@ class Precompiler
   helpers: ->
 
     # Get Jade helpers
-    attrs = jade.runtime.attrs.toString()
+    attrs = jade.runtime.attrs.toString().replace('exports.','')
     escape = jade.runtime.escape.toString()
     rethrow = jade.runtime.rethrow.toString()
 
