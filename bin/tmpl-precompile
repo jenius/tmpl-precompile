@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var colors, cwd, fs, jsondir, jsonfile, match, precompile, settings;
 
 jsonfile = process.argv[2] || 'tmpl-precompile.json';
@@ -30,7 +31,7 @@ if (settings !== {}) {
     jsondir = match.slice(0, match.length - 1).join('/');
     cwd += '/' + jsondir;
   }
-  console.log('\n' + 'tmpl-precompile'.bold.underline + '\n');
+  console.log('\n\n' + 'tmpl-precompile'.bold.underline + '\n');
   console.log('Using configuration file: ' + (cwd + '/' + match[match.length - 1]).underline + '\n');
   precompile(settings, cwd);
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var colors, cwd, fs, jsondir, jsonfile, match, precompile, settings;
 
 jsonfile = process.argv[2] || 'tmpl-precompile.json';
